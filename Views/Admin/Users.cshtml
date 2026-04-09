@@ -1,0 +1,74 @@
+@model CodeGraphWeb.ViewModels.Admin.AdminUsersViewModel
+@using CodeGraphWeb.Constants
+@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<section class="space-y-6">
+    <div>
+        <h1 class="text-3xl font-black tracking-tight">Kullanýcý Rol Yönetimi</h1>
+        <p class="text-on-surface-variant mt-1">Global roller: SuperAdmin / Admin / User</p>
+    </div>
+
+    @if (TempData["RoleError"] is string roleError)
+    {
+        <div class="rounded-lg border border-red-400/30 bg-red-400/10 text-red-200 px-4 py-3 text-sm">@roleError</div>
+    }
+
+    @if (TempData["RoleSuccess"] is string roleSuccess)
+    {
+        <div class="rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-200 px-4 py-3 text-sm">@roleSuccess</div>
+    }
+
+    <div class="bg-surface-container rounded-xl border border-white/10 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead class="bg-surface-container-high text-on-surface-variant uppercase text-xs tracking-wider">
+                    <tr>
+                        <th class="px-4 py-3 text-left">Ad Soyad</th>
+                        <th class="px-4 py-3 text-left">E-posta</th>
+                        <th class="px-4 py-3 text-left">Mevcut Rol</th>
+                        <th class="px-4 py-3 text-left">Yeni Rol</th>
+                        <th class="px-4 py-3 text-left">Ýþlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr class="border-t border-white/5">
+                            <td class="px-4 py-3">@user.FullName</td>
+                            <td class="px-4 py-3 text-on-surface-variant">@user.Email</td>
+                            <td class="px-4 py-3 text-on-surface-variant">@user.CurrentRole</td>
+                            <td class="px-4 py-3" colspan="2">
+                                @if (user.CurrentRole == Roles.SuperAdmin)
+                                {
+                                    <span class="text-xs font-semibold text-on-surface-variant">SuperAdmin rolü panelden deðiþtirilemez.</span>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Admin" asp-action="AssignRole" method="post" class="flex items-center gap-3">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="UserId" value="@user.UserId" />
+                                        <select name="Role" class="bg-surface-container-high rounded-md border border-white/10 px-3 py-2">
+                                            @if (user.CurrentRole == Roles.User)
+                                            {
+                                                <option value="@Roles.User" selected>@Roles.User</option>
+                                                <option value="@Roles.Admin">@Roles.Admin</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@Roles.User">@Roles.User</option>
+                                                <option value="@Roles.Admin" selected>@Roles.Admin</option>
+                                            }
+                                        </select>
+                                        <button type="submit" class="bg-primary-container text-on-primary px-3 py-2 rounded-md font-semibold">Güncelle</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

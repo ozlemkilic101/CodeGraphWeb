@@ -1,22 +1,19 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CodeGraphWeb.Models;
 
 public class Project
 {
     public int Id { get; set; }
 
-    public string? Name { get; set; }
+    [Required]
+    [MaxLength(200)]
+    public string Name { get; set; } = string.Empty;
 
+    [MaxLength(1000)]
     public string? Description { get; set; }
 
-    public int CompanyId { get; set; } // Projenin ait olduğu şirketin ID'si
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public int CreatedByUserId { get; set; } // Projeyi oluşturan kullanıcının ID'si
-
-    public DateTime CreatedAt{get;set;}
-
-    public Project(){
-        CreatedAt = DateTime.Now;
-
-    }
-
+    public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
 }

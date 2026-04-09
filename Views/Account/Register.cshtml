@@ -1,0 +1,120 @@
+@model CodeGraphWeb.ViewModels.RegisterViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Kayýt Ol";
+}
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kayýt Ol | CodeGraph</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: "#0F1117",
+                        "surface-container": "#1e1f26",
+                        "surface-container-low": "#191b22",
+                        "surface-container-highest": "#33343b",
+                        "on-surface": "#e2e2eb",
+                        "on-surface-variant": "#c2c6d5",
+                        outline: "#8c909e",
+                        primary: "#acc7ff",
+                        "primary-container": "#508ff8",
+                        error: "#ffb4ab"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0F1117; }
+        .glass-panel { background: rgba(30, 31, 38, 0.6); backdrop-filter: blur(24px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 selection:bg-primary/30">
+    <main class="w-full max-w-[420px] flex flex-col gap-8">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-container to-primary flex items-center justify-center shadow-2xl shadow-primary/20">
+                <span class="material-symbols-outlined text-[#001a40] text-4xl">person_add</span>
+            </div>
+            <div class="text-center">
+                <h1 class="text-4xl font-black tracking-tight text-white mb-1">CodeGraph</h1>
+                <p class="text-on-surface-variant text-sm font-medium">Yeni hesap oluþturun</p>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-xl p-8 border border-white/5 shadow-2xl shadow-black/60">
+            <form asp-action="Register" method="post" class="space-y-5">
+                <div asp-validation-summary="ModelOnly" class="text-sm text-error"></div>
+
+                <div class="space-y-2">
+                    <label asp-for="FullName" class="block text-[13px] font-semibold text-on-surface-variant tracking-wide ml-1 uppercase"></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+                            <span class="material-symbols-outlined text-[20px]">badge</span>
+                        </div>
+                        <input asp-for="FullName" placeholder="Ad Soyad" class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary outline-none" />
+                    </div>
+                    <span asp-validation-for="FullName" class="text-xs text-error"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="Email" class="block text-[13px] font-semibold text-on-surface-variant tracking-wide ml-1 uppercase"></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+                            <span class="material-symbols-outlined text-[20px]">mail</span>
+                        </div>
+                        <input asp-for="Email" placeholder="name@company.com" class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary outline-none" />
+                    </div>
+                    <span asp-validation-for="Email" class="text-xs text-error"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="Password" class="block text-[13px] font-semibold text-on-surface-variant tracking-wide ml-1 uppercase"></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+                            <span class="material-symbols-outlined text-[20px]">lock</span>
+                        </div>
+                        <input asp-for="Password" placeholder="••••••••" class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary outline-none" />
+                    </div>
+                    <span asp-validation-for="Password" class="text-xs text-error"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="ConfirmPassword" class="block text-[13px] font-semibold text-on-surface-variant tracking-wide ml-1 uppercase"></label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-outline">
+                            <span class="material-symbols-outlined text-[20px]">lock_reset</span>
+                        </div>
+                        <input asp-for="ConfirmPassword" placeholder="••••••••" class="w-full bg-surface-container-highest border-none rounded-lg py-3.5 pl-11 pr-4 text-sm text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary outline-none" />
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-xs text-error"></span>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-primary-container to-primary hover:opacity-90 active:scale-[0.98] text-[#001a40] font-bold py-3.5 rounded-lg transition-all shadow-lg shadow-primary/10 flex items-center justify-center gap-2">
+                    <span>Kayýt Ol</span>
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center text-sm text-on-surface-variant font-medium">
+            Zaten hesabýnýz var mý?
+            <a asp-controller="Account" asp-action="Login" class="text-primary hover:underline decoration-2 underline-offset-4 ml-1">Giriþ yap</a>
+        </p>
+    </main>
+
+    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full -z-10"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full -z-10"></div>
+
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

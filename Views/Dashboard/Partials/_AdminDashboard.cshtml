@@ -1,0 +1,44 @@
+@model CodeGraphWeb.ViewModels.DashboardViewModel
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Þirket Kullanýcýsý (Scope)</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalUsers</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Þirket Projesi (Scope)</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalProjects</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Açýk Risk</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalRisks</h3>
+    </article>
+</div>
+
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="text-lg font-bold">Projeler</h4>
+        <a asp-controller="Project" asp-action="Create" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">Proje Oluþtur</a>
+    </div>
+
+    @if (Model.Projects.Count == 0)
+    {
+        <p class="text-on-surface-variant text-sm">Henüz proje bulunmuyor.</p>
+    }
+    else
+    {
+        <div class="space-y-2">
+            @foreach (var project in Model.Projects)
+            {
+                <div class="bg-surface-container-high rounded-md px-3 py-2">
+                    <p class="font-semibold">@project.Name</p>
+                    <p class="text-xs text-on-surface-variant">@project.Description</p>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<div class="mt-6">
+    <a asp-controller="Company" asp-action="Index" class="bg-surface-container-high text-on-surface px-4 py-2 rounded-md font-semibold">Kullanýcý Davet Et</a>
+</div>

@@ -1,7 +1,52 @@
-<h2 class="text-2xl font-bold mb-4">Project Detail</h2>
+@{
+    ViewData["Title"] = "Project Detail";
+}
 
-<div class="bg-gray-800 p-6 rounded space-y-4">
-    <p><strong>Name:</strong> Project X</p>
-    <p><strong>Stack:</strong> .NET</p>
-    <p><strong>Status:</strong> Active</p>
+<div class="space-y-6">
+    <div class="bg-surface-container rounded-xl border border-white/5 p-6 space-y-4">
+        <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-black">Auth-Gateway-API</h3>
+            <span class="text-[10px] font-black px-2 py-1 rounded bg-error/10 text-error">HIGH RISK</span>
+        </div>
+        <p class="text-on-surface-variant">Critical authentication service for customer identity operations.</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-surface-container-high p-4 rounded-lg">
+                <p class="text-xs text-on-surface-variant uppercase">Stack</p>
+                <p class="font-bold mt-1">.NET 7.0</p>
+            </div>
+            <div class="bg-surface-container-high p-4 rounded-lg">
+                <p class="text-xs text-on-surface-variant uppercase">Dependencies</p>
+                <p class="font-bold mt-1">142</p>
+            </div>
+            <div class="bg-surface-container-high p-4 rounded-lg">
+                <p class="text-xs text-on-surface-variant uppercase">Open Issues</p>
+                <p class="font-bold mt-1">12</p>
+            </div>
+            <div class="bg-surface-container-high p-4 rounded-lg">
+                <p class="text-xs text-on-surface-variant uppercase">Risk Score</p>
+                <p class="font-bold mt-1 text-error">84 / 100</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-surface-container rounded-xl border border-white/5 overflow-hidden">
+        <div class="p-5 border-b border-white/5 flex items-center justify-between">
+            <h4 class="font-bold">Top Vulnerable Dependencies</h4>
+            <a href="/Project" class="text-sm text-primary font-semibold">Back to projects</a>
+        </div>
+        <div class="p-5 space-y-3 text-sm">
+            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
+                <span>Newtonsoft.Json 12.0.1</span>
+                <span class="text-error font-bold">Critical</span>
+            </div>
+            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
+                <span>Polly 7.2.2</span>
+                <span class="text-tertiary font-bold">Medium</span>
+            </div>
+            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
+                <span>Serilog.AspNetCore 6.1.0</span>
+                <span class="text-primary font-bold">Low</span>
+            </div>
+        </div>
+    </div>
 </div>

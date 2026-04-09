@@ -1,10 +1,42 @@
-<h2 class="text-2xl font-bold mb-6">Projects</h2>
+@{
+    ViewData["Title"] = "Projects";
+}
 
-<a href="/Project/Create" class="bg-blue-600 px-4 py-2 rounded">New Project</a>
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h3 class="text-3xl font-black tracking-tight">My Projects</h3>
+            <p class="text-on-surface-variant">Track analysis status, risk score and dependency growth.</p>
+        </div>
+        <a href="/Project/Create" class="bg-gradient-to-br from-primary-container to-primary px-6 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
+            New Project
+        </a>
+    </div>
 
-<div class="mt-6 grid grid-cols-3 gap-4">
-    <div class="bg-gray-800 p-4 rounded">
-        <h3 class="font-bold">Project X</h3>
-        <a href="/Project/Detail" class="text-blue-400 text-sm">View</a>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
+            <div class="flex items-center justify-between">
+                <h4 class="text-lg font-bold">Auth-Gateway-API</h4>
+                <span class="text-[10px] font-black px-2 py-1 rounded bg-error/10 text-error">HIGH</span>
+            </div>
+            <p class="text-sm text-on-surface-variant">.NET 7.0 · 142 dependencies · Last scan 2h ago</p>
+            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
+        </article>
+        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
+            <div class="flex items-center justify-between">
+                <h4 class="text-lg font-bold">Mobile-Storefront-App</h4>
+                <span class="text-[10px] font-black px-2 py-1 rounded bg-tertiary/10 text-tertiary">MEDIUM</span>
+            </div>
+            <p class="text-sm text-on-surface-variant">Android · 218 dependencies · Last scan yesterday</p>
+            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
+        </article>
+        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
+            <div class="flex items-center justify-between">
+                <h4 class="text-lg font-bold">Data-Pipeline-Orchestrator</h4>
+                <span class="text-[10px] font-black px-2 py-1 rounded bg-primary/10 text-primary">LOW</span>
+            </div>
+            <p class="text-sm text-on-surface-variant">Python · 88 dependencies · Last scan 3d ago</p>
+            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
+        </article>
     </div>
 </div>

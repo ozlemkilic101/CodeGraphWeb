@@ -1,0 +1,52 @@
+@model CodeGraphWeb.ViewModels.DashboardViewModel
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Sorumlu Projeler</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalProjects</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Toplam Risk</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalRisks</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Proje Rolü</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.ProjectRole</h3>
+    </article>
+</div>
+
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="text-lg font-bold">Dependency Graph Summary</h4>
+        <a asp-controller="Project" asp-action="Index" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">Analiz Baþlat</a>
+    </div>
+
+    <div class="space-y-2">
+        @foreach (var project in Model.Projects)
+        {
+            <div class="bg-surface-container-high rounded-md px-3 py-2">
+                <p class="font-semibold">@project.Name</p>
+                <p class="text-xs text-on-surface-variant">Oluþturulma: @project.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <h4 class="text-lg font-bold mb-4">Risk Listesi</h4>
+    @if (Model.Risks.Count == 0)
+    {
+        <p class="text-on-surface-variant text-sm">Risk bulunamadý.</p>
+    }
+    else
+    {
+        <ul class="space-y-2">
+            @foreach (var risk in Model.Risks)
+            {
+                <li class="bg-surface-container-high rounded-md px-3 py-2 text-sm">
+                    <span class="font-semibold">@risk.ProjectName</span> - @risk.Severity - @risk.Description
+                </li>
+            }
+        </ul>
+    }
+</section>

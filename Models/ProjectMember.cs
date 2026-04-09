@@ -1,11 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CodeGraphWeb.Models;
+
 public class ProjectMember
 {
     public int Id { get; set; }
 
+    [Required]
+    public string UserId { get; set; } = string.Empty;
+
     public int ProjectId { get; set; }
 
-    public int UserId { get; set; }
+    [Required]
+    [MaxLength(32)]
+    public string Role { get; set; } = string.Empty;
 
-    public string? Role{get;set;} // Proje içindeki rolü (örneğin, "Developer", "Manager", "Tester" vb.)
+    public ApplicationUser? User { get; set; }
+
+    public Project? Project { get; set; }
 }

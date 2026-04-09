@@ -1,0 +1,52 @@
+@model CodeGraphWeb.ViewModels.DashboardViewModel
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Dahil Olduðun Projeler</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalProjects</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Sorumlu Olduðun Riskler</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalRisks</h3>
+    </article>
+</div>
+
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <h4 class="text-lg font-bold mb-4">Projeler (Read Only)</h4>
+    @if (Model.Projects.Count == 0)
+    {
+        <p class="text-on-surface-variant text-sm">Henüz bir projeye atanmadýnýz.</p>
+    }
+    else
+    {
+        <ul class="space-y-2">
+            @foreach (var project in Model.Projects)
+            {
+                <li class="bg-surface-container-high rounded-md px-3 py-2 text-sm">
+                    <span class="font-semibold">@project.Name</span>
+                    <span class="text-on-surface-variant"> - @project.Description</span>
+                </li>
+            }
+        </ul>
+    }
+</section>
+
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <h4 class="text-lg font-bold mb-4">Aktiviteler</h4>
+    @if (Model.RecentActivities.Count == 0)
+    {
+        <p class="text-on-surface-variant text-sm">Aktivite bulunamadý.</p>
+    }
+    else
+    {
+        <ul class="space-y-2 text-sm">
+            @foreach (var activity in Model.RecentActivities)
+            {
+                <li class="bg-surface-container-high rounded-md px-3 py-2">
+                    <span class="font-semibold">@activity.Action</span>
+                    <span class="text-on-surface-variant"> - @activity.Date.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span>
+                </li>
+            }
+        </ul>
+    }
+</section>

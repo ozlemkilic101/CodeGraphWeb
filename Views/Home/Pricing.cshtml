@@ -1,0 +1,216 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html class="dark" lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Çözümler | CodeGraph</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#002f68",
+                        "background": "#111319",
+                        "surface-container-high": "#282a30",
+                        "surface-container-highest": "#33343b",
+                        "surface": "#111319",
+                        "primary-fixed-dim": "#acc7ff",
+                        "tertiary": "#ffb873",
+                        "on-secondary-container": "#a4b8e6",
+                        "secondary-container": "#344970",
+                        "surface-variant": "#33343b",
+                        "surface-container": "#1e1f26",
+                        "surface-bright": "#373940",
+                        "on-surface-variant": "#c2c6d5",
+                        "on-surface": "#e2e2eb",
+                        "primary-container": "#508ff8",
+                        "surface-container-lowest": "#0c0e14",
+                        "secondary": "#b2c7f5",
+                        "outline-variant": "#424753",
+                        "surface-dim": "#111319",
+                        "inverse-primary": "#005bbf",
+                        "primary": "#acc7ff",
+                        "on-background": "#e2e2eb",
+                        "surface-container-low": "#191b22",
+                        "outline": "#8c909e",
+                        "error": "#ffb4ab"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111319; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, #1a3055 0%, #111319 70%); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+    <nav class="fixed top-0 w-full z-50 bg-[#111319]/80 backdrop-blur-xl transition-all">
+        <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+            <div class="flex items-center gap-8">
+                <a asp-controller="Home" asp-action="Index" class="text-xl font-bold tracking-tighter text-slate-50 font-sans Inter">CodeGraph</a>
+                <div class="hidden md:flex gap-6">
+                    <a class="text-blue-400 font-semibold font-sans Inter tracking-tight" href="#">Platform</a>
+                    <a asp-controller="Home" asp-action="Solutions" class="text-slate-400 hover:text-slate-100 transition-colors duration-200 font-sans Inter tracking-tight">Çözümler</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a asp-controller="Account" asp-action="Login" class="text-slate-400 hover:text-slate-100 transition-colors duration-200 font-sans Inter text-sm font-medium scale-95 active:opacity-80">Giriş Yap</a>
+                <a asp-controller="Account" asp-action="Register" class="bg-primary-container text-on-primary-container px-5 py-2 rounded-lg font-bold text-sm scale-95 active:opacity-80 transition-all hover:brightness-110">Hemen Başla</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="hero-gradient min-h-screen">
+        <section class="pt-32 pb-16 px-6 text-center max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/30 border border-outline-variant/20 mb-6">
+                <span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
+                <span class="text-xs font-medium text-primary tracking-wide uppercase">Yeni: AI Risk Intelligence</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-on-surface mb-6">
+                Yüksek Ölçekli Ekipler için <br /><span class="bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent">Öngörülebilir Çözümler</span>
+            </h1>
+            <p class="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                Güvenlik seviyenizi artırırken karmaşıklığı değil verimi büyütün. Modern yazılım mimarileri için şeffaf fiyatlandırma.
+            </p>
+        </section>
+
+        <section class="px-6 pb-32 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
+                <div class="bg-surface-container border border-outline-variant/10 rounded-2xl p-8 flex flex-col">
+                    <div class="mb-8">
+                        <h3 class="text-emerald-300 text-sm font-semibold uppercase tracking-widest mb-2">Free</h3>
+                        <div class="flex items-baseline gap-1"><span class="text-4xl font-bold text-on-surface">Ücretsiz</span></div>
+                        <p class="mt-4 text-on-surface-variant text-sm leading-relaxed">Sisteme giriş ve ilk deneyim için ideal plan.</p>
+                    </div>
+                    <div class="space-y-4 mb-10 flex-grow">
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">1 proje</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Basic dependency graph</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Haftada 1 vulnerability scan</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Manuel scan</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Solo user + basic dashboard</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-tertiary text-lg">warning</span><span class="text-on-surface text-sm">Limit: max 100 dependency</span></div>
+                    </div>
+                    <a asp-controller="Account" asp-action="Register" class="w-full py-3 px-4 rounded-xl border border-outline-variant text-on-surface font-semibold text-sm text-center">Başla</a>
+                </div>
+
+                <div class="bg-surface-container border border-outline-variant/10 rounded-2xl p-8 flex flex-col">
+                    <div class="mb-8">
+                        <h3 class="text-sky-300 text-sm font-semibold uppercase tracking-widest mb-2">Starter</h3>
+                        <div class="flex items-baseline gap-1"><span class="text-4xl font-bold text-on-surface">$19</span><span class="text-on-surface-variant text-sm">/ay</span></div>
+                        <p class="mt-4 text-on-surface-variant text-sm leading-relaxed">Bireysel geliştirici ve küçük projeler için.</p>
+                    </div>
+                    <div class="space-y-4 mb-10 flex-grow">
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">3-5 proje</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Günlük scan</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Severity: low/medium/high</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Basit risk score + email alert</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">1-2 team member</span></div>
+                    </div>
+                    <a asp-controller="Account" asp-action="Register" class="w-full py-3 px-4 rounded-xl border border-outline-variant text-on-surface font-semibold text-sm text-center">Başla</a>
+                </div>
+
+                <div class="relative bg-surface-container-high border-2 border-primary/50 rounded-2xl p-8 flex flex-col transform md:-translate-y-4 shadow-2xl shadow-primary/10">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">En Popüler</div>
+                    <div class="mb-8">
+                        <h3 class="text-violet-300 text-sm font-semibold uppercase tracking-widest mb-2">Pro</h3>
+                        <div class="flex items-baseline gap-1"><span class="text-4xl font-bold text-on-surface">$49</span><span class="text-on-surface-variant text-sm">/ay ekip</span></div>
+                        <p class="mt-4 text-on-surface-variant text-sm leading-relaxed">Startup ve küçük ekipler için gerçek ürün katmanı.</p>
+                    </div>
+                    <div class="space-y-4 mb-10 flex-grow">
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">10+ proje</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Unlimited scan</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Real-time dependency tracking</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">CI/CD entegrasyonu (GitHub/GitLab)</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Team collaboration + history</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Advanced risk scoring + graph detayları</span></div>
+                    </div>
+                    <a asp-controller="Account" asp-action="Register" class="w-full py-3 px-4 rounded-xl bg-gradient-to-br from-primary-container to-primary text-on-primary font-bold text-sm text-center">Başla</a>
+                </div>
+
+                <div class="bg-surface-container border border-outline-variant/10 rounded-2xl p-8 flex flex-col">
+                    <div class="mb-8">
+                        <h3 class="text-amber-300 text-sm font-semibold uppercase tracking-widest mb-2">Business</h3>
+                        <div class="flex items-baseline gap-1"><span class="text-4xl font-bold text-on-surface">$199</span><span class="text-on-surface-variant text-sm">/ay</span></div>
+                        <p class="mt-4 text-on-surface-variant text-sm leading-relaxed">Ölçeklenmiş ekipler için kritik operasyon katmanı.</p>
+                    </div>
+                    <div class="space-y-4 mb-10 flex-grow">
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Unlimited project</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">10-50 ekip üyesi</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Role-based access (admin/editor/user)</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Audit logs + SOC2 tarzı logging</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Custom alerts + priority scanning</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">API access</span></div>
+                    </div>
+                    <a href="mailto:ozlemkilic101@gmail.com?subject=Business%20Plan" class="w-full py-3 px-4 rounded-xl border border-outline-variant text-on-surface font-semibold text-sm text-center">Satış ile Görüş</a>
+                </div>
+
+                <div class="bg-surface-container border border-outline-variant/10 rounded-2xl p-8 flex flex-col">
+                    <div class="mb-8">
+                        <h3 class="text-red-300 text-sm font-semibold uppercase tracking-widest mb-2">Enterprise</h3>
+                        <div class="flex items-baseline gap-1"><span class="text-4xl font-bold text-on-surface">Özel</span></div>
+                        <p class="mt-4 text-on-surface-variant text-sm leading-relaxed">Büyük şirketler için tam özelleştirilebilir güvenlik altyapısı.</p>
+                    </div>
+                    <div class="space-y-4 mb-10 flex-grow">
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">On-premise / private cloud</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">SSO (Azure AD, Okta)</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">SLA garantisi</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Dedicated support</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Custom integrations</span></div>
+                        <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span class="text-on-surface text-sm">Advanced AI analysis</span></div>
+                    </div>
+                    <a href="mailto:ozlemkilic101@gmail.com?subject=Enterprise%20Pricing" class="w-full py-3 px-4 rounded-xl border border-outline-variant text-on-surface font-semibold text-sm text-center">Satış ile Görüş</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-6 py-24 bg-surface-container-low border-y border-outline-variant/5">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                    <div class="md:col-span-8 bg-surface-container rounded-3xl p-10 border border-outline-variant/10">
+                        <h2 class="text-3xl font-bold text-on-surface mb-4">Ölçekte Hassas Analiz</h2>
+                        <p class="text-on-surface-variant max-w-md">Çözüm modelimiz satır sayısına değil, sağlanan güvenlik zekasının değerine odaklanır.</p>
+                    </div>
+                    <div class="md:col-span-4 bg-primary-container/10 rounded-3xl p-10 border border-primary/20 flex flex-col justify-center">
+                        <div class="mb-6 w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-primary">security</span></div>
+                        <h3 class="text-xl font-bold text-on-surface mb-2">SOC2 Type II</h3>
+                        <p class="text-on-surface-variant text-sm">Kurumsal seviyede güvenlik ve uyumluluk standartlarıyla çalışırız.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="px-6 py-24 max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12">Sık Sorulan Sorular</h2>
+            <div class="space-y-6">
+                <div class="p-6 rounded-2xl bg-surface-container border border-outline-variant/5"><h4 class="text-lg font-semibold mb-3">Kod metadatası ne kadar güvenli?</h4><p class="text-on-surface-variant">CodeGraph yalnızca yapısal metadata ve dependency tanımlarını işler. Kaynak kodunuz saklanmaz.</p></div>
+                <div class="p-6 rounded-2xl bg-surface-container border border-outline-variant/5"><h4 class="text-lg font-semibold mb-3">Planı istediğim zaman değiştirebilir miyim?</h4><p class="text-on-surface-variant">Evet. Ayarlar üzerinden plan yükseltme/düşürme anında yapılabilir.</p></div>
+                <div class="p-6 rounded-2xl bg-surface-container border border-outline-variant/5"><h4 class="text-lg font-semibold mb-3">Kullanıcı limiti aşılırsa ne olur?</h4><p class="text-on-surface-variant">7 günlük geçiş süresi tanımlanır, hizmet kesintisi yaşanmaz.</p></div>
+                <div class="p-6 rounded-2xl bg-surface-container border border-outline-variant/5"><h4 class="text-lg font-semibold mb-3">Açık kaynak için indirim var mı?</h4><p class="text-on-surface-variant">Doğrulanmış açık kaynak projeleri için özel destek sunulabilir.</p></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#0d0f14] border-t border-slate-800/50">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full px-8 py-12 gap-6 max-w-screen-2xl mx-auto">
+            <div class="flex flex-col items-center md:items-start gap-4">
+                <span class="text-lg font-black text-slate-300">CodeGraph</span>
+                <span class="text-xs text-slate-500">© 2026 CodeGraph.</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8">
+                <a class="text-xs text-slate-500 hover:text-blue-400 transition-colors" href="#">Gizlilik</a>
+                <a class="text-xs text-slate-500 hover:text-blue-400 transition-colors" href="#">Şartlar</a>
+                <a class="text-xs text-slate-500 hover:text-blue-400 transition-colors" href="#">Güvenlik</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
