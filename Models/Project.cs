@@ -13,7 +13,11 @@ public class Project
     [MaxLength(1000)]
     public string? Description { get; set; }
 
+    public int CompanyId { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public Company? Company { get; set; }
 
     public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
 }

@@ -1,4 +1,4 @@
-@{
+ï»¿@{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString() ?? string.Empty;
     string NavClass(string controller, string? area = null) =>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <nav class="flex-1">
+                <nav class="flex-1">
             <a class="@NavClass("Home")" href="/Home">
                 <span class="material-symbols-outlined">home</span>
                 <span class="text-[13px] font-medium tracking-wide">Home</span>
@@ -83,28 +83,43 @@
                 </a>
             }
 
-            <a class="@NavClass("Project")" href="/Project">
-                <span class="material-symbols-outlined">account_tree</span>
-                <span class="text-[13px] font-medium tracking-wide">My Projects</span>
-            </a>
-
-            @if (User.IsInRole(Roles.SuperAdmin))
-            {
-                <a class="@NavClass("Admin")" asp-controller="Admin" asp-action="Users">
-                    <span class="material-symbols-outlined">admin_panel_settings</span>
-                    <span class="text-[13px] font-medium tracking-wide">User Management</span>
-                </a>
-                <a class="@NavClass("Admin")" asp-controller="Admin" asp-action="Users">
-                    <span class="material-symbols-outlined">manage_accounts</span>
-                    <span class="text-[13px] font-medium tracking-wide">Role Management</span>
-                </a>
-            }
-
-            @if (User.IsInRole(Roles.Admin))
+            @if (User.IsInRole(Roles.SystemAdmin))
             {
                 <a class="@NavClass("Company")" href="/Company">
                     <span class="material-symbols-outlined">domain</span>
-                    <span class="text-[13px] font-medium tracking-wide">Company Yönetimi</span>
+                    <span class="text-[13px] font-medium tracking-wide">Companies</span>
+                </a>
+                <a class="@NavClass("Admin")" asp-controller="Admin" asp-action="Users">
+                    <span class="material-symbols-outlined">admin_panel_settings</span>
+                    <span class="text-[13px] font-medium tracking-wide">Users</span>
+                </a>
+            }
+
+            @if (User.IsInRole(Roles.CompanyAdmin))
+            {
+                <a class="@NavClass("Project")" href="/Project">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    <span class="text-[13px] font-medium tracking-wide">Projects</span>
+                </a>
+                <a class="@NavClass("Admin")" asp-controller="Admin" asp-action="Users">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="text-[13px] font-medium tracking-wide">Team</span>
+                </a>
+            }
+
+            @if (User.IsInRole(Roles.TechLead))
+            {
+                <a class="@NavClass("Project")" href="/Project">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    <span class="text-[13px] font-medium tracking-wide">My Projects</span>
+                </a>
+            }
+
+            @if (User.IsInRole(Roles.User))
+            {
+                <a class="@NavClass("Project")" href="/Project">
+                    <span class="material-symbols-outlined">view_list</span>
+                    <span class="text-[13px] font-medium tracking-wide">Assigned Projects</span>
                 </a>
             }
         </nav>
@@ -165,3 +180,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+

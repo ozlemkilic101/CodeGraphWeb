@@ -10,15 +10,15 @@
         <p class="text-on-surface-variant mt-2">@Model.WelcomeMessage</p>
     </div>
 
-    @if (User.IsInRole(Roles.SuperAdmin))
+    @if (Model.Role == Roles.SystemAdmin)
     {
         @await Html.PartialAsync("Partials/_SuperAdminDashboard", Model)
     }
-    else if (User.IsInRole(Roles.Admin))
+    else if (Model.Role == Roles.CompanyAdmin)
     {
         @await Html.PartialAsync("Partials/_AdminDashboard", Model)
     }
-    else if (Model.ProjectRole == ProjectRoles.TechLead)
+    else if (Model.Role == Roles.TechLead || Model.ProjectRole == ProjectRoles.TechLead)
     {
         @await Html.PartialAsync("Partials/_TechLeadDashboard", Model)
     }

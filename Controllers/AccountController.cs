@@ -1,9 +1,11 @@
 using CodeGraphWeb.Constants;
+using CodeGraphWeb.Data;
 using CodeGraphWeb.Models;
 using CodeGraphWeb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CodeGraphWeb.Controllers;
 
@@ -11,13 +13,16 @@ public class AccountController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ApplicationDbContext _dbContext;
 
     public AccountController(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        ApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _dbContext = dbContext;
     }
 
     [AllowAnonymous]
@@ -82,11 +87,28 @@ public class AccountController : Controller
             return View(model);
         }
 
+        var normalizedCompany = model.CompanyName.Trim();
+        var company = await _dbContext.Companies.FirstOrDefaultAsync(
+            x => x.Name != null && x.Name.ToLower() == normalizedCompany.ToLower());
+
+        if (company is null)
+        {
+            company = new Company
+            {
+                Name = normalizedCompany,
+                SubscriptionId = 1
+            };
+
+            _dbContext.Companies.Add(company);
+            await _dbContext.SaveChangesAsync();
+        }
+
         var user = new ApplicationUser
         {
             FullName = model.FullName,
             UserName = model.Email,
-            Email = model.Email
+            Email = model.Email,
+            CompanyId = company.Id
         };
 
         var result = await _userManager.CreateAsync(user, model.Password);

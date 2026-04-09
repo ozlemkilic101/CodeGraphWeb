@@ -12,5 +12,5 @@ public sealed class AddProjectMemberInputModel
     public int ProjectId { get; set; }
 
     [Required]
-    public string Role { get; set; } = ProjectRoles.Developer;
+    public string Role { get; set; } = ProjectRoles.User;
 }

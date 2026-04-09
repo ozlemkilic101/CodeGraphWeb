@@ -1,4 +1,4 @@
-using System.Security.Claims;
+ï»¿using System.Security.Claims;
 using CodeGraphWeb.Constants;
 using CodeGraphWeb.Data;
 using CodeGraphWeb.Models;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CodeGraphWeb.Controllers;
 
-[Authorize]
+[Authorize(Roles = $"{Roles.CompanyAdmin},{Roles.TechLead},{Roles.User}")]
 public class ProjectController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
@@ -29,6 +29,7 @@ public class ProjectController : Controller
         return View();
     }
 
+    [Authorize(Roles = $"{Roles.CompanyAdmin},{Roles.TechLead}")]
     public IActionResult Create()
     {
         return View();
@@ -41,16 +42,17 @@ public class ProjectController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = $"{Roles.CompanyAdmin},{Roles.TechLead}")]
     public async Task<IActionResult> AddMember(AddProjectMemberInputModel model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest("Geçersiz istek.");
+            return BadRequest("Gecersiz istek.");
         }
 
         if (!ProjectRoles.All.Contains(model.Role))
         {
-            return BadRequest("Geçersiz proje rolü.");
+            return BadRequest("Gecersiz proje rolu.");
         }
 
         var actorUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -59,28 +61,45 @@ public class ProjectController : Controller
             return Challenge();
         }
 
-        var canManageProject = await _projectAuthorizationService.IsTechLeadAsync(actorUserId, model.ProjectId);
+        var actor = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == actorUserId);
+        if (actor is null)
+        {
+            return Challenge();
+        }
+
+        var isCompanyAdmin = User.IsInRole(Roles.CompanyAdmin);
+        var canManageProject = isCompanyAdmin || await _projectAuthorizationService.IsTechLeadAsync(actorUserId, model.ProjectId);
         if (!canManageProject)
         {
             return Forbid();
         }
 
-        var projectExists = await _dbContext.Projects.AnyAsync(x => x.Id == model.ProjectId);
-        if (!projectExists)
+        var project = await _dbContext.Projects.FirstOrDefaultAsync(x => x.Id == model.ProjectId);
+        if (project is null)
         {
-            return NotFound("Proje bulunamadý.");
+            return NotFound("Proje bulunamadi.");
         }
 
-        var userExists = await _dbContext.Users.AnyAsync(x => x.Id == model.UserId);
-        if (!userExists)
+        if (isCompanyAdmin && actor.CompanyId != project.CompanyId)
         {
-            return NotFound("Kullanýcý bulunamadý.");
+            return Forbid();
+        }
+
+        var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == model.UserId);
+        if (user is null)
+        {
+            return NotFound("Kullanici bulunamadi.");
+        }
+
+        if (isCompanyAdmin && user.CompanyId != actor.CompanyId)
+        {
+            return Forbid();
         }
 
         var alreadyExists = await _dbContext.ProjectMembers.AnyAsync(x => x.UserId == model.UserId && x.ProjectId == model.ProjectId);
         if (alreadyExists)
         {
-            return Conflict("Kullanýcý bu projeye zaten eklenmiþ.");
+            return Conflict("Kullanici bu projeye zaten eklenmis.");
         }
 
         var projectMember = new ProjectMember
@@ -95,7 +114,7 @@ public class ProjectController : Controller
 
         return Ok(new
         {
-            message = "Kullanýcý projeye eklendi.",
+            message = "Kullanici projeye eklendi.",
             projectId = model.ProjectId,
             userId = model.UserId,
             role = model.Role

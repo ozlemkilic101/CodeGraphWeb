@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CodeGraphWeb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae9be2b803a1dfe32e29f7b36302215ffcd5802c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d1b2a70df5c001aaeec2abaaa5218493e095c8e")]
 [assembly: System.Reflection.AssemblyProductAttribute("CodeGraphWeb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CodeGraphWeb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

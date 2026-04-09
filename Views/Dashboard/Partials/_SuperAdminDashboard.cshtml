@@ -1,63 +1,59 @@
 @model CodeGraphWeb.ViewModels.DashboardViewModel
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <article class="bg-surface-container p-6 rounded-xl border border-white/10">
-        <p class="text-sm text-on-surface-variant">Toplam Kullanýcý</p>
+        <p class="text-sm text-on-surface-variant">Toplam Sirket</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalCompanies</h3>
+    </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Toplam Kullanici</p>
         <h3 class="text-3xl font-bold mt-1">@Model.TotalUsers</h3>
     </article>
-    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
-        <p class="text-sm text-on-surface-variant">Toplam Proje</p>
-        <h3 class="text-3xl font-bold mt-1">@Model.TotalProjects</h3>
-    </article>
-    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
-        <p class="text-sm text-on-surface-variant">Toplam Risk</p>
-        <h3 class="text-3xl font-bold mt-1">@Model.TotalRisks</h3>
-    </article>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-    <section class="bg-surface-container rounded-xl border border-white/10 p-6">
-        <h4 class="text-lg font-bold mb-4">Rol Daðýlýmý</h4>
-        @if (Model.RoleDistribution.Count == 0)
-        {
-            <p class="text-on-surface-variant text-sm">Rol verisi bulunamadý.</p>
-        }
-        else
-        {
-            <ul class="space-y-2 text-sm">
-                @foreach (var item in Model.RoleDistribution)
-                {
-                    <li class="flex items-center justify-between bg-surface-container-high rounded-md px-3 py-2">
-                        <span>@item.Key</span>
-                        <span class="font-semibold">@item.Value</span>
-                    </li>
-                }
-            </ul>
-        }
-    </section>
+<section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="text-lg font-bold">Sirketler ve Kullanicilar</h4>
+        <a asp-controller="Admin" asp-action="Users" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">Rol Yonetimi</a>
+    </div>
 
-    <section class="bg-surface-container rounded-xl border border-white/10 p-6">
-        <h4 class="text-lg font-bold mb-4">Son Kullanýcýlar</h4>
-        @if (Model.RecentUsers.Count == 0)
-        {
-            <p class="text-on-surface-variant text-sm">Kullanýcý bulunamadý.</p>
-        }
-        else
-        {
-            <ul class="space-y-2 text-sm">
-                @foreach (var user in Model.RecentUsers)
-                {
-                    <li class="bg-surface-container-high rounded-md px-3 py-2">
-                        <p class="font-semibold">@user.FullName</p>
-                        <p class="text-on-surface-variant">@user.Email</p>
-                    </li>
-                }
-            </ul>
-        }
-    </section>
-</div>
-
-<div class="flex gap-3 mt-6">
-    <a asp-controller="Admin" asp-action="Users" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">User Management</a>
-    <a asp-controller="Admin" asp-action="Users" class="bg-surface-container-high text-on-surface px-4 py-2 rounded-md font-semibold">Role Management</a>
-</div>
+    @if (Model.CompanyGroups.Count == 0)
+    {
+        <p class="text-on-surface-variant text-sm">Sirket verisi bulunamadi.</p>
+    }
+    else
+    {
+        <div class="space-y-3">
+            @foreach (var company in Model.CompanyGroups)
+            {
+                <details class="bg-surface-container-high rounded-lg border border-white/5" open>
+                    <summary class="px-4 py-3 cursor-pointer font-semibold flex items-center justify-between">
+                        <span>@company.CompanyName</span>
+                        <span class="text-xs text-on-surface-variant">@company.Users.Count kullanici</span>
+                    </summary>
+                    <div class="px-4 pb-4">
+                        @if (company.Users.Count == 0)
+                        {
+                            <p class="text-xs text-on-surface-variant">Kullanici bulunamadi.</p>
+                        }
+                        else
+                        {
+                            <ul class="space-y-2 text-sm">
+                                @foreach (var user in company.Users)
+                                {
+                                    <li class="bg-surface-container-low rounded-md px-3 py-2 flex items-center justify-between">
+                                        <div>
+                                            <p class="font-semibold">@user.FullName</p>
+                                            <p class="text-xs text-on-surface-variant">@user.Email</p>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 rounded bg-primary/10 text-primary">@user.Role</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </details>
+            }
+        </div>
+    }
+</section>

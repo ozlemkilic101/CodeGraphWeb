@@ -13,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
+    public DbSet<Company> Companies => Set<Company>();
     public DbSet<Risk> Risks => Set<Risk>();
     public DbSet<AnalysisResult> AnalysisResults => Set<AnalysisResult>();
 
@@ -24,6 +25,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
             entity.Property(x => x.Description).HasMaxLength(1000);
+
+            entity
+                .HasOne(x => x.Company)
+                .WithMany(x => x.Projects)
+                .HasForeignKey(x => x.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<ProjectMember>(entity =>
@@ -42,6 +49,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .WithMany(x => x.Members)
                 .HasForeignKey(x => x.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<Company>(entity =>
+        {
+            entity.Property(x => x.Name).HasMaxLength(200);
+        });
+
+        builder.Entity<ApplicationUser>(entity =>
+        {
+            entity
+                .HasOne(x => x.Company)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.CompanyId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         builder.Entity<Risk>(entity =>

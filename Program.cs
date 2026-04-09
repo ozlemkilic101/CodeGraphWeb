@@ -1,3 +1,4 @@
+using CodeGraphWeb.Constants;
 using CodeGraphWeb.Data;
 using CodeGraphWeb.Models;
 using CodeGraphWeb.Services;
@@ -30,6 +31,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = options.DefaultPolicy;
+
+    options.AddPolicy("DashboardAccess", policy =>
+        policy.RequireRole(Roles.SystemAdmin, Roles.CompanyAdmin, Roles.TechLead, Roles.User));
+
+    options.AddPolicy("TeamManagement", policy =>
+        policy.RequireRole(Roles.SystemAdmin, Roles.CompanyAdmin));
+
+    options.AddPolicy("ProjectWrite", policy =>
+        policy.RequireRole(Roles.CompanyAdmin, Roles.TechLead));
+
+    options.AddPolicy("ProjectRead", policy =>
+        policy.RequireRole(Roles.CompanyAdmin, Roles.TechLead, Roles.User));
 });
 
 builder.Services.AddScoped<IProjectAuthorizationService, ProjectAuthorizationService>();

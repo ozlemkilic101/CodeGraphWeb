@@ -13,6 +13,10 @@ public class RegisterViewModel
     [Display(Name = "E-posta")]
     public string Email { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Þirket adý zorunludur.")]
+    [Display(Name = "Þirket Adý")]
+    public string CompanyName { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Þifre zorunludur.")]
     [DataType(DataType.Password)]
     [MinLength(6, ErrorMessage = "Þifre en az 6 karakter olmalýdýr.")]

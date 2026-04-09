@@ -3,6 +3,7 @@ using System;
 using CodeGraphWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeGraphWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409120704_InitIdentityAndProjectRoles")]
+    partial class InitIdentityAndProjectRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
@@ -138,9 +141,6 @@ namespace CodeGraphWeb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -154,8 +154,6 @@ namespace CodeGraphWeb.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.ToTable("Projects");
                 });
@@ -351,17 +349,6 @@ namespace CodeGraphWeb.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("CodeGraphWeb.Models.Project", b =>
-                {
-                    b.HasOne("CodeGraphWeb.Models.Company", "Company")
-                        .WithMany("Projects")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("CodeGraphWeb.Models.ProjectMember", b =>
                 {
                     b.HasOne("CodeGraphWeb.Models.Project", "Project")
@@ -434,8 +421,6 @@ namespace CodeGraphWeb.Migrations
 
             modelBuilder.Entity("CodeGraphWeb.Models.Company", b =>
                 {
-                    b.Navigation("Projects");
-
                     b.Navigation("Users");
                 });
 
