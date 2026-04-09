@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeGraphWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260409193133_InitIdentityAndProjectRoles2")]
-    partial class InitIdentityAndProjectRoles2
+    [Migration("20260409203745_AddProjectFileUploadMetadata")]
+    partial class AddProjectFileUploadMetadata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

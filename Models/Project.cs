@@ -13,6 +13,14 @@ public class Project
     [MaxLength(1000)]
     public string? Description { get; set; }
 
+    [MaxLength(500)]
+    public string? FilePath { get; set; }
+
+    [MaxLength(255)]
+    public string? FileName { get; set; }
+
+    public DateTime UploadDate { get; set; }
+
     public int CompanyId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

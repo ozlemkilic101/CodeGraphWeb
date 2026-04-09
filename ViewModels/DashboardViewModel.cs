@@ -10,6 +10,7 @@ public class DashboardViewModel
     public List<ProjectDto> Projects { get; set; } = [];
     public int TotalUsers { get; set; }
     public int TotalProjects { get; set; }
+    public int ActiveProjects { get; set; }
     public int TotalRisks { get; set; }
 
     public List<CompanyUsersDto> CompanyGroups { get; set; } = [];
@@ -52,6 +53,8 @@ public class CompanyUsersDto
 {
     public int CompanyId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
+    public int UserCount { get; set; }
+    public int ProjectCount { get; set; }
     public List<CompanyUserDto> Users { get; set; } = [];
 }
 

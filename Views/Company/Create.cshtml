@@ -1,3 +1,4 @@
+﻿@model CodeGraphWeb.ViewModels.Company.CreateCompanyInputModel
 @{
     ViewData["Title"] = "Create Company";
 }
@@ -5,33 +6,27 @@
 <div class="max-w-3xl space-y-6">
     <div>
         <h3 class="text-3xl font-black tracking-tight">Create Company</h3>
-        <p class="text-on-surface-variant">Register a new organization for project and vulnerability tracking.</p>
+        <p class="text-on-surface-variant">Yeni tenant sirketini veritabanina kaydet.</p>
     </div>
 
-    <form class="bg-surface-container-low rounded-xl border border-outline-variant/10 overflow-hidden">
+    <form asp-controller="Company" asp-action="Create" method="post" class="bg-surface-container-low rounded-xl border border-outline-variant/10 overflow-hidden">
+        @Html.AntiForgeryToken()
         <div class="p-8 space-y-5">
             <div class="space-y-2">
-                <label class="text-[13px] font-semibold text-on-surface-variant ml-1">Company Name</label>
-                <input type="text" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50" placeholder="e.g. Nova Systems" />
-            </div>
-            <div class="space-y-2">
-                <label class="text-[13px] font-semibold text-on-surface-variant ml-1">Industry</label>
-                <select class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50">
-                    <option>Software</option>
-                    <option>FinTech</option>
-                    <option>HealthTech</option>
-                    <option>E-commerce</option>
-                </select>
-            </div>
-            <div class="space-y-2">
-                <label class="text-[13px] font-semibold text-on-surface-variant ml-1">Description</label>
-                <textarea rows="3" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50" placeholder="Short company profile"></textarea>
+                <label asp-for="Name" class="text-[13px] font-semibold text-on-surface-variant ml-1"></label>
+                <input asp-for="Name" class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/50" placeholder="e.g. AIZOF" />
+                <span asp-validation-for="Name" class="text-red-300 text-xs"></span>
             </div>
         </div>
-        <div class="p-6 bg-surface-container-highest/30 border-t border-outline-variant/10 flex justify-end">
-            <button class="bg-gradient-to-br from-primary-container to-primary px-8 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
+        <div class="p-6 bg-surface-container-highest/30 border-t border-outline-variant/10 flex justify-end gap-2">
+            <a asp-controller="Company" asp-action="Index" class="px-6 py-3 text-sm font-bold text-on-surface-variant hover:text-on-surface">Cancel</a>
+            <button type="submit" class="bg-gradient-to-br from-primary-container to-primary px-8 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
                 Create Company
             </button>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

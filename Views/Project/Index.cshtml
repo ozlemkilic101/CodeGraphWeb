@@ -1,42 +1,49 @@
+﻿@model CodeGraphWeb.ViewModels.Project.ProjectIndexViewModel
 @{
     ViewData["Title"] = "Projects";
 }
 
-<div class="space-y-6">
+<section class="space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h3 class="text-3xl font-black tracking-tight">My Projects</h3>
-            <p class="text-on-surface-variant">Track analysis status, risk score and dependency growth.</p>
+            <h3 class="text-3xl font-black tracking-tight">Projects</h3>
+            <p class="text-on-surface-variant">Tüm proje listesi veritabanindan role/tenant filtresi ile gelir.</p>
         </div>
-        <a href="/Project/Create" class="bg-gradient-to-br from-primary-container to-primary px-6 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
-            New Project
-        </a>
+
+        @if (Model.CanCreateProject)
+        {
+            <a asp-controller="Project" asp-action="Create" class="bg-gradient-to-br from-primary-container to-primary px-6 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
+                New Project
+            </a>
+        }
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
-            <div class="flex items-center justify-between">
-                <h4 class="text-lg font-bold">Auth-Gateway-API</h4>
-                <span class="text-[10px] font-black px-2 py-1 rounded bg-error/10 text-error">HIGH</span>
-            </div>
-            <p class="text-sm text-on-surface-variant">.NET 7.0 · 142 dependencies · Last scan 2h ago</p>
-            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
-        </article>
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
-            <div class="flex items-center justify-between">
-                <h4 class="text-lg font-bold">Mobile-Storefront-App</h4>
-                <span class="text-[10px] font-black px-2 py-1 rounded bg-tertiary/10 text-tertiary">MEDIUM</span>
-            </div>
-            <p class="text-sm text-on-surface-variant">Android · 218 dependencies · Last scan yesterday</p>
-            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
-        </article>
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-4">
-            <div class="flex items-center justify-between">
-                <h4 class="text-lg font-bold">Data-Pipeline-Orchestrator</h4>
-                <span class="text-[10px] font-black px-2 py-1 rounded bg-primary/10 text-primary">LOW</span>
-            </div>
-            <p class="text-sm text-on-surface-variant">Python · 88 dependencies · Last scan 3d ago</p>
-            <a href="/Project/Detail" class="text-sm font-semibold text-primary">Open detail</a>
-        </article>
-    </div>
-</div>
+    @if (TempData["ProjectSuccess"] is string projectSuccess)
+    {
+        <div class="rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-200 px-4 py-3 text-sm">@projectSuccess</div>
+    }
+
+    @if (Model.Projects.Count == 0)
+    {
+        <div class="bg-surface-container rounded-xl border border-white/10 p-6 text-sm text-on-surface-variant">
+            Gosterilecek proje yok.
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            @foreach (var project in Model.Projects)
+            {
+                <article class="bg-surface-container rounded-xl p-6 border border-white/10 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-lg font-bold">@project.Name</h4>
+                        <span class="text-xs text-on-surface-variant">@project.CompanyName</span>
+                    </div>
+                    <p class="text-sm text-on-surface-variant">@(string.IsNullOrWhiteSpace(project.Description) ? "Aciklama yok" : project.Description)</p>
+                    <p class="text-xs text-on-surface-variant">Members: @project.MemberCount · Created: @project.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+                    <a asp-controller="Project" asp-action="Detail" asp-route-id="@project.Id" class="text-sm font-semibold text-primary">Open detail</a>
+                </article>
+            }
+        </div>
+    }
+</section>

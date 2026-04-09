@@ -1,33 +1,58 @@
+﻿@model CodeGraphWeb.ViewModels.Company.CompanyIndexViewModel
 @{
     ViewData["Title"] = "Companies";
 }
 
-<div class="space-y-6">
+<section class="space-y-6">
     <div class="flex items-center justify-between">
         <div>
             <h3 class="text-3xl font-black tracking-tight">Companies</h3>
-            <p class="text-on-surface-variant">Manage organizations and their active analysis pipelines.</p>
+            <p class="text-on-surface-variant">Database source of truth ile senkron sirket listesi.</p>
         </div>
-        <a href="/Company/Create" class="bg-gradient-to-br from-primary-container to-primary px-6 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
-            New Company
-        </a>
+        @if (Model.IsSystemAdmin)
+        {
+            <a asp-controller="Company" asp-action="Create" class="bg-gradient-to-br from-primary-container to-primary px-6 py-3 rounded-lg text-on-primary font-bold shadow-lg shadow-primary/20">
+                New Company
+            </a>
+        }
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-2">
-            <h4 class="text-lg font-bold">Nova Systems</h4>
-            <p class="text-sm text-on-surface-variant">Projects: 8</p>
-            <p class="text-sm text-on-surface-variant">Members: 26</p>
-        </article>
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-2">
-            <h4 class="text-lg font-bold">Artemis Labs</h4>
-            <p class="text-sm text-on-surface-variant">Projects: 5</p>
-            <p class="text-sm text-on-surface-variant">Members: 14</p>
-        </article>
-        <article class="bg-surface-container rounded-xl p-6 border border-white/5 space-y-2">
-            <h4 class="text-lg font-bold">Pioneer Cloud</h4>
-            <p class="text-sm text-on-surface-variant">Projects: 3</p>
-            <p class="text-sm text-on-surface-variant">Members: 11</p>
-        </article>
-    </div>
-</div>
+    @if (TempData["CompanyError"] is string companyError)
+    {
+        <div class="rounded-lg border border-red-400/30 bg-red-400/10 text-red-200 px-4 py-3 text-sm">@companyError</div>
+    }
+
+    @if (TempData["CompanySuccess"] is string companySuccess)
+    {
+        <div class="rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-200 px-4 py-3 text-sm">@companySuccess</div>
+    }
+
+    @if (Model.Companies.Count == 0)
+    {
+        <div class="bg-surface-container rounded-xl border border-white/10 p-6 text-sm text-on-surface-variant">
+            Kayitli sirket bulunamadi.
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var company in Model.Companies)
+            {
+                <article class="bg-surface-container rounded-xl p-6 border border-white/10 space-y-3">
+                    <h4 class="text-lg font-bold">@company.Name</h4>
+                    <p class="text-sm text-on-surface-variant">Projects: @company.ProjectCount</p>
+                    <p class="text-sm text-on-surface-variant">Members: @company.UserCount</p>
+
+                    @if (Model.IsSystemAdmin)
+                    {
+                        <form asp-controller="Company" asp-action="Delete" method="post" onsubmit="return confirm('Bu sirket silinsin mi?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@company.Id" />
+                            <button type="submit" class="text-sm font-semibold text-red-300 hover:text-red-200 transition-colors">Delete</button>
+                        </form>
+                    }
+                </article>
+            }
+        </div>
+    }
+</section>

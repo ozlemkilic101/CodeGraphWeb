@@ -1,6 +1,6 @@
-@model CodeGraphWeb.ViewModels.DashboardViewModel
+﻿@model CodeGraphWeb.ViewModels.DashboardViewModel
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <article class="bg-surface-container p-6 rounded-xl border border-white/10">
         <p class="text-sm text-on-surface-variant">Toplam Sirket</p>
         <h3 class="text-3xl font-bold mt-1">@Model.TotalCompanies</h3>
@@ -9,12 +9,19 @@
         <p class="text-sm text-on-surface-variant">Toplam Kullanici</p>
         <h3 class="text-3xl font-bold mt-1">@Model.TotalUsers</h3>
     </article>
+    <article class="bg-surface-container p-6 rounded-xl border border-white/10">
+        <p class="text-sm text-on-surface-variant">Yonetilen Proje Sayisi</p>
+        <h3 class="text-3xl font-bold mt-1">@Model.TotalProjects</h3>
+    </article>
 </div>
 
 <section class="bg-surface-container rounded-xl border border-white/10 p-6 mt-6">
     <div class="flex items-center justify-between mb-4">
-        <h4 class="text-lg font-bold">Sirketler ve Kullanicilar</h4>
-        <a asp-controller="Admin" asp-action="Users" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">Rol Yonetimi</a>
+        <h4 class="text-lg font-bold">Company Management</h4>
+        <div class="flex gap-2">
+            <a asp-controller="Company" asp-action="Create" class="bg-primary-container text-on-primary px-4 py-2 rounded-md font-semibold">Create Company</a>
+            <a asp-controller="Admin" asp-action="Users" class="bg-surface-container-high text-on-surface px-4 py-2 rounded-md font-semibold">Role Management</a>
+        </div>
     </div>
 
     @if (Model.CompanyGroups.Count == 0)
@@ -29,7 +36,7 @@
                 <details class="bg-surface-container-high rounded-lg border border-white/5" open>
                     <summary class="px-4 py-3 cursor-pointer font-semibold flex items-center justify-between">
                         <span>@company.CompanyName</span>
-                        <span class="text-xs text-on-surface-variant">@company.Users.Count kullanici</span>
+                        <span class="text-xs text-on-surface-variant">@company.UserCount kullanici · @company.ProjectCount proje</span>
                     </summary>
                     <div class="px-4 pb-4">
                         @if (company.Users.Count == 0)

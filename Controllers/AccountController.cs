@@ -1,4 +1,4 @@
-using CodeGraphWeb.Constants;
+ï»¿using CodeGraphWeb.Constants;
 using CodeGraphWeb.Data;
 using CodeGraphWeb.Models;
 using CodeGraphWeb.ViewModels;
@@ -63,16 +63,17 @@ public class AccountController : Controller
             return RedirectToAction("Index", "Dashboard");
         }
 
-        ModelState.AddModelError(string.Empty, "Giriþ baþarýsýz. E-posta veya þifre hatalý.");
+        ModelState.AddModelError(string.Empty, "Giris basarisiz. E-posta veya sifre hatali.");
         return View(model);
     }
 
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult Register()
+    public async Task<IActionResult> Register(CancellationToken cancellationToken)
     {
         ViewData["Title"] = "Register";
-        return View(new RegisterViewModel());
+        var model = await BuildRegisterViewModelAsync(new RegisterViewModel(), cancellationToken);
+        return View(model);
     }
 
     [AllowAnonymous]
@@ -81,26 +82,19 @@ public class AccountController : Controller
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
         ViewData["Title"] = "Register";
+        model = await BuildRegisterViewModelAsync(model);
 
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        var normalizedCompany = model.CompanyName.Trim();
-        var company = await _dbContext.Companies.FirstOrDefaultAsync(
-            x => x.Name != null && x.Name.ToLower() == normalizedCompany.ToLower());
-
+        var company = await _dbContext.Companies.FirstOrDefaultAsync(x => x.Id == model.CompanyId);
         if (company is null)
         {
-            company = new Company
-            {
-                Name = normalizedCompany,
-                SubscriptionId = 1
-            };
-
-            _dbContext.Companies.Add(company);
-            await _dbContext.SaveChangesAsync();
+            ModelState.AddModelError(nameof(model.CompanyId), "Secilen sirket bulunamadi.");
+            model = await BuildRegisterViewModelAsync(model);
+            return View(model);
         }
 
         var user = new ApplicationUser
@@ -119,6 +113,7 @@ public class AccountController : Controller
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
+            model = await BuildRegisterViewModelAsync(model);
             return View(model);
         }
 
@@ -131,6 +126,7 @@ public class AccountController : Controller
             }
 
             await _userManager.DeleteAsync(user);
+            model = await BuildRegisterViewModelAsync(model);
             return View(model);
         }
 
@@ -152,7 +148,22 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult AccessDenied()
     {
-        ViewData["Title"] = "Eriþim Reddedildi";
+        ViewData["Title"] = "Erisim Reddedildi";
         return View();
+    }
+
+    private async Task<RegisterViewModel> BuildRegisterViewModelAsync(RegisterViewModel model, CancellationToken cancellationToken = default)
+    {
+        model.AvailableCompanies = await _dbContext.Companies
+            .AsNoTracking()
+            .OrderBy(x => x.Name)
+            .Select(x => new RegisterCompanyOptionViewModel
+            {
+                Id = x.Id,
+                Name = x.Name ?? $"Sirket #{x.Id}"
+            })
+            .ToListAsync(cancellationToken);
+
+        return model;
     }
 }

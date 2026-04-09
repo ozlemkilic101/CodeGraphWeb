@@ -25,6 +25,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
             entity.Property(x => x.Description).HasMaxLength(1000);
+            entity.Property(x => x.FilePath).HasMaxLength(500);
+            entity.Property(x => x.FileName).HasMaxLength(255);
 
             entity
                 .HasOne(x => x.Company)

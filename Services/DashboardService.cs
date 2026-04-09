@@ -139,9 +139,27 @@ public sealed class DashboardService : IDashboardService
             {
                 CompanyId = company.Id,
                 CompanyName = company.Name,
-                Users = groupedUsers.TryGetValue(company.Id, out var users) ? users : []
+                Users = groupedUsers.TryGetValue(company.Id, out var users) ? users : [],
+                UserCount = groupedUsers.TryGetValue(company.Id, out var countUsers) ? countUsers.Count : 0
             })
             .ToList();
+
+        var projectCounts = await _dbContext.Projects
+            .AsNoTracking()
+            .GroupBy(x => x.CompanyId)
+            .Select(x => new { CompanyId = x.Key, Count = x.Count() })
+            .ToDictionaryAsync(x => x.CompanyId, x => x.Count, cancellationToken);
+
+        foreach (var group in companyGroups)
+        {
+            group.ProjectCount = projectCounts.TryGetValue(group.CompanyId, out var count) ? count : 0;
+        }
+
+        var activeProjectCount = await _dbContext.AnalysisResults
+            .AsNoTracking()
+            .Select(x => x.ProjectId)
+            .Distinct()
+            .CountAsync(cancellationToken);
 
         var roleDistribution = await (from role in _dbContext.Roles
                                       join userRole in _dbContext.UserRoles on role.Id equals userRole.RoleId into grouped
@@ -152,6 +170,8 @@ public sealed class DashboardService : IDashboardService
         {
             TotalCompanies = companies.Count,
             TotalUsers = companyUsers.Count,
+            TotalProjects = projectCounts.Values.Sum(),
+            ActiveProjects = activeProjectCount,
             RoleDistribution = roleDistribution,
             CompanyGroups = companyGroups
         };

@@ -1,3 +1,4 @@
+﻿@model CodeGraphWeb.ViewModels.Project.ProjectDetailViewModel
 @{
     ViewData["Title"] = "Project Detail";
 }
@@ -5,48 +6,65 @@
 <div class="space-y-6">
     <div class="bg-surface-container rounded-xl border border-white/5 p-6 space-y-4">
         <div class="flex items-center justify-between">
-            <h3 class="text-2xl font-black">Auth-Gateway-API</h3>
-            <span class="text-[10px] font-black px-2 py-1 rounded bg-error/10 text-error">HIGH RISK</span>
+            <h3 class="text-2xl font-black">@Model.Name</h3>
+            <span class="text-[10px] font-black px-2 py-1 rounded bg-primary/10 text-primary">@Model.CompanyName</span>
         </div>
-        <p class="text-on-surface-variant">Critical authentication service for customer identity operations.</p>
+        <p class="text-on-surface-variant">@(string.IsNullOrWhiteSpace(Model.Description) ? "Aciklama yok." : Model.Description)</p>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="bg-surface-container-high p-4 rounded-lg">
-                <p class="text-xs text-on-surface-variant uppercase">Stack</p>
-                <p class="font-bold mt-1">.NET 7.0</p>
+                <p class="text-xs text-on-surface-variant uppercase">Created</p>
+                <p class="font-bold mt-1">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</p>
             </div>
             <div class="bg-surface-container-high p-4 rounded-lg">
-                <p class="text-xs text-on-surface-variant uppercase">Dependencies</p>
-                <p class="font-bold mt-1">142</p>
+                <p class="text-xs text-on-surface-variant uppercase">Members</p>
+                <p class="font-bold mt-1">@Model.MemberCount</p>
             </div>
             <div class="bg-surface-container-high p-4 rounded-lg">
-                <p class="text-xs text-on-surface-variant uppercase">Open Issues</p>
-                <p class="font-bold mt-1">12</p>
+                <p class="text-xs text-on-surface-variant uppercase">Risks</p>
+                <p class="font-bold mt-1">@Model.RiskCount</p>
             </div>
             <div class="bg-surface-container-high p-4 rounded-lg">
-                <p class="text-xs text-on-surface-variant uppercase">Risk Score</p>
-                <p class="font-bold mt-1 text-error">84 / 100</p>
+                <p class="text-xs text-on-surface-variant uppercase">Project Id</p>
+                <p class="font-bold mt-1">#@Model.Id</p>
             </div>
+        </div>
+        <div class="bg-surface-container-high rounded-lg p-4">
+            <p class="text-xs text-on-surface-variant uppercase">Uploaded File</p>
+            @if (string.IsNullOrWhiteSpace(Model.FileName))
+            {
+                <p class="font-bold mt-1">No file</p>
+            }
+            else
+            {
+                <p class="font-bold mt-1">@Model.FileName</p>
+                <p class="text-on-surface-variant text-xs mt-1">Uploaded: @Model.UploadDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+            }
         </div>
     </div>
 
     <div class="bg-surface-container rounded-xl border border-white/5 overflow-hidden">
         <div class="p-5 border-b border-white/5 flex items-center justify-between">
-            <h4 class="font-bold">Top Vulnerable Dependencies</h4>
-            <a href="/Project" class="text-sm text-primary font-semibold">Back to projects</a>
+            <h4 class="font-bold">Team Members</h4>
+            <a asp-controller="Project" asp-action="Index" class="text-sm text-primary font-semibold">Back to projects</a>
         </div>
         <div class="p-5 space-y-3 text-sm">
-            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
-                <span>Newtonsoft.Json 12.0.1</span>
-                <span class="text-error font-bold">Critical</span>
-            </div>
-            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
-                <span>Polly 7.2.2</span>
-                <span class="text-tertiary font-bold">Medium</span>
-            </div>
-            <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
-                <span>Serilog.AspNetCore 6.1.0</span>
-                <span class="text-primary font-bold">Low</span>
-            </div>
+            @if (Model.Members.Count == 0)
+            {
+                <p class="text-on-surface-variant">Bu projede uye yok.</p>
+            }
+            else
+            {
+                @foreach (var member in Model.Members)
+                {
+                    <div class="bg-surface-container-high rounded-lg p-4 flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold">@member.FullName</p>
+                            <p class="text-on-surface-variant text-xs">@member.Email</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded bg-primary/10 text-primary">@member.Role</span>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>

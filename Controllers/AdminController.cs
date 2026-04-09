@@ -44,9 +44,14 @@ public class AdminController : Controller
         var users = await query.OrderBy(x => x.CompanyId).ThenBy(x => x.Email).ToListAsync(cancellationToken);
 
         var companyIds = users.Where(x => x.CompanyId.HasValue).Select(x => x.CompanyId!.Value).Distinct().ToList();
-        var companyMap = await _dbContext.Companies
+        var companies = await _dbContext.Companies
+            .AsNoTracking()
+            .OrderBy(x => x.Name)
+            .ToListAsync(cancellationToken);
+
+        var companyMap = companies
             .Where(x => companyIds.Contains(x.Id))
-            .ToDictionaryAsync(x => x.Id, x => x.Name ?? $"Şirket #{x.Id}", cancellationToken);
+            .ToDictionary(x => x.Id, x => x.Name ?? $"Sirket #{x.Id}");
 
         var userIds = users.Select(x => x.Id).ToList();
         var roleRows = await (from ur in _dbContext.UserRoles
@@ -83,10 +88,24 @@ public class AdminController : Controller
                 Users = x.OrderBy(u => u.FullName).ToList()
             }).ToList();
 
+        var availableRoles = await _dbContext.Roles
+            .AsNoTracking()
+            .Where(x => x.Name == Roles.CompanyAdmin || x.Name == Roles.TechLead || x.Name == Roles.User)
+            .OrderBy(x => x.Name)
+            .Select(x => x.Name!)
+            .ToListAsync(cancellationToken);
+
         var model = new AdminUsersViewModel
         {
             IsSystemAdmin = isSystemAdmin,
-            AvailableRoles = [Roles.CompanyAdmin, Roles.TechLead, Roles.User],
+            AvailableRoles = availableRoles.Count > 0 ? availableRoles : [Roles.CompanyAdmin, Roles.TechLead, Roles.User],
+            AvailableCompanies = companies
+                .Select(x => new AdminCompanyOptionViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name ?? $"Sirket #{x.Id}"
+                })
+                .ToList(),
             CompanyGroups = groups
         };
 
@@ -155,6 +174,129 @@ public class AdminController : Controller
         }
 
         TempData["RoleSuccess"] = "Kullanıcı rolü güncellendi.";
+        return RedirectToAction(nameof(Users));
+    }
+
+    [HttpPost("AssignCompany")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AssignCompany(AssignCompanyInputModel model)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null)
+        {
+            return Challenge();
+        }
+
+        var isSystemAdmin = await _userManager.IsInRoleAsync(currentUser, Roles.SystemAdmin);
+        if (!isSystemAdmin)
+        {
+            return Forbid();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["RoleError"] = "Gecersiz sirket atama istegi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var companyExists = await _dbContext.Companies.AnyAsync(x => x.Id == model.CompanyId);
+        if (!companyExists)
+        {
+            TempData["RoleError"] = "Sirket bulunamadi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user is null)
+        {
+            TempData["RoleError"] = "Kullanici bulunamadi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (userRoles.Contains(Roles.SystemAdmin))
+        {
+            TempData["RoleError"] = "SystemAdmin kullanicisinin sirketi degistirilemez.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        user.CompanyId = model.CompanyId;
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            TempData["RoleError"] = string.Join(" ", updateResult.Errors.Select(x => x.Description));
+            return RedirectToAction(nameof(Users));
+        }
+
+        TempData["RoleSuccess"] = "Kullanici sirketi guncellendi.";
+        return RedirectToAction(nameof(Users));
+    }
+
+    [HttpPost("UpdateUser")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateUser(UpdateUserInputModel model)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null)
+        {
+            return Challenge();
+        }
+
+        var isSystemAdmin = await _userManager.IsInRoleAsync(currentUser, Roles.SystemAdmin);
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user is null)
+        {
+            TempData["RoleError"] = "Kullanici bulunamadi.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        if (!isSystemAdmin && user.CompanyId != currentUser.CompanyId)
+        {
+            return Forbid();
+        }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (!isSystemAdmin && userRoles.Contains(Roles.SystemAdmin))
+        {
+            return Forbid();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["RoleError"] = "Kullanici guncelleme verisi gecersiz.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        var emailOwner = await _userManager.FindByEmailAsync(model.Email);
+        if (emailOwner is not null && emailOwner.Id != user.Id)
+        {
+            TempData["RoleError"] = "Bu e-posta baska bir kullaniciya ait.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        user.FullName = model.FullName.Trim();
+        user.Email = model.Email.Trim();
+        user.UserName = model.Email.Trim();
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            TempData["RoleError"] = string.Join(" ", updateResult.Errors.Select(x => x.Description));
+            return RedirectToAction(nameof(Users));
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.NewPassword))
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+            if (!passwordResult.Succeeded)
+            {
+                TempData["RoleError"] = string.Join(" ", passwordResult.Errors.Select(x => x.Description));
+                return RedirectToAction(nameof(Users));
+            }
+        }
+
+        TempData["RoleSuccess"] = "Kullanici bilgileri guncellendi.";
         return RedirectToAction(nameof(Users));
     }
 }

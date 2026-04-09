@@ -23,6 +23,8 @@ public static class IdentitySeed
 
         await dbContext.Database.MigrateAsync();
 
+        await NormalizeCompaniesAsync(dbContext);
+
         foreach (var role in Roles.All)
         {
             if (!await roleManager.RoleExistsAsync(role))
@@ -78,6 +80,59 @@ public static class IdentitySeed
         }
 
         await NormalizeUserRolesAsync(userManager, systemAdminEmail);
+    }
+
+    private static async Task NormalizeCompaniesAsync(ApplicationDbContext dbContext)
+    {
+        var companies = await dbContext.Companies
+            .OrderBy(x => x.Id)
+            .ToListAsync();
+
+        static string NormalizeKey(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return string.Empty;
+            }
+
+            return string.Join(" ", name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries))
+                .ToLowerInvariant();
+        }
+
+        var groups = companies
+            .GroupBy(x => NormalizeKey(x.Name))
+            .Where(x => !string.IsNullOrWhiteSpace(x.Key) && x.Count() > 1)
+            .ToList();
+
+        if (groups.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var group in groups)
+        {
+            var survivor = group.First();
+            var duplicates = group.Skip(1).ToList();
+
+            foreach (var duplicate in duplicates)
+            {
+                var users = await dbContext.Users.Where(x => x.CompanyId == duplicate.Id).ToListAsync();
+                foreach (var user in users)
+                {
+                    user.CompanyId = survivor.Id;
+                }
+
+                var projects = await dbContext.Projects.Where(x => x.CompanyId == duplicate.Id).ToListAsync();
+                foreach (var project in projects)
+                {
+                    project.CompanyId = survivor.Id;
+                }
+
+                dbContext.Companies.Remove(duplicate);
+            }
+        }
+
+        await dbContext.SaveChangesAsync();
     }
 
     private static async Task NormalizeUserRolesAsync(UserManager<ApplicationUser> userManager, string systemAdminEmail)
